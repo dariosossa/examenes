@@ -170,10 +170,86 @@
             top: 140px;
             z-index: 40;
         }
+
+        .app-hidden {
+            display: none !important;
+        }
+
+        .study-shell {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #eef5fb 0%, #f8fafc 100%);
+        }
+
+        .study-card {
+            background: #ffffff;
+            border: 1px solid #d8e1ea;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(15, 108, 191, 0.08);
+        }
+
+        .study-topic summary {
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .study-topic summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .study-topic[open] .study-chevron {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 
 <body class="bg-[#f2f4f8] text-[#212529] text-sm relative">
+    <!-- PANTALLA INICIAL: ELEGIR ENTRE ESTUDIAR O DAR EL EXAMEN -->
+    <section class="study-shell flex items-center justify-center px-4 py-10" id="modeScreen">
+        <div class="study-card w-full max-w-xl p-6 sm:p-9 text-center">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-[#0f6cbf] text-white flex items-center justify-center mb-5 shadow-lg">
+                <i class="w-8 h-8" data-lucide="graduation-cap"></i>
+            </div>
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-[#0f6cbf] mb-2">Clase de repaso</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">¿Qué deseas hacer primero?</h1>
+            <p class="text-base text-slate-600 leading-relaxed mb-7">Puedes revisar el contenido de forma ordenada o comenzar directamente el examen de práctica.</p>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <button class="rounded-xl border-2 border-[#0f6cbf] bg-white px-5 py-5 text-[#0f6cbf] hover:bg-blue-50 transition-colors" id="chooseStudyBtn" type="button">
+                    <i class="w-7 h-7 mx-auto mb-2" data-lucide="book-open"></i>
+                    <span class="block text-lg font-bold">Estudiar</span>
+                    <span class="block mt-1 text-xs text-slate-600">Repasar por temas</span>
+                </button>
+                <button class="rounded-xl bg-[#0f6cbf] px-5 py-5 text-white hover:bg-[#0b589e] transition-colors shadow-md" id="chooseExamBtn" type="button">
+                    <i class="w-7 h-7 mx-auto mb-2" data-lucide="clipboard-check"></i>
+                    <span class="block text-lg font-bold">Dar el examen</span>
+                    <span class="block mt-1 text-xs text-blue-100">Practicar como está ahora</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODO ESTUDIO: EL CONTENIDO SE GENERA DESDE LAS RESPUESTAS DEL EXAMEN -->
+    <section class="study-shell app-hidden" id="studyScreen">
+        <header class="sticky top-0 z-50 bg-[#002654] text-white border-b-2 border-amber-400 shadow-md">
+            <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Modo estudio</p>
+                    <h2 class="text-base sm:text-lg font-bold">Repaso antes del examen</h2>
+                </div>
+                <button class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold rounded-lg px-4 py-2 text-sm" id="studyToExamBtn" type="button">Dar el examen</button>
+            </div>
+        </header>
+        <main class="max-w-4xl mx-auto px-4 py-7">
+            <div class="study-card p-5 mb-5">
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Guía de estudio</h3>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">Estudia un bloque a la vez. Lee cada idea y su respuesta; cuando estés preparado, pulsa <strong>Dar el examen</strong>. Las preguntas del examen seguirán apareciendo mezcladas para practicar.</p>
+            </div>
+            <div class="space-y-4" id="studyTopics"></div>
+            <div class="flex flex-col sm:flex-row gap-3 mt-7 pb-8">
+                <button class="btn-moodle-primary rounded-lg px-5 py-3 font-bold text-sm" id="studyBottomExamBtn" type="button">Ya estudié: dar el examen</button>
+                <button class="rounded-lg border border-slate-300 bg-white px-5 py-3 font-semibold text-sm text-slate-700" id="backToChoiceBtn" type="button">Volver al inicio</button>
+            </div>
+        </main>
+    </section>
     <!-- ============================================================ -->
     <!-- BARRA FIJA SUPERIOR NATIVA (CRONÓMETRO TRANSCURRIDO) -->
     <!-- ============================================================ -->
@@ -4914,7 +4990,111 @@
                 attachEventsToQuestion(q);
             });
             renderDrawerNavGrid();
+        }
+
+        const studyGroups = [
+            { title: '1. Antinomias y criterios de solución', range: [1, 10], intro: 'Conflictos entre normas, ámbitos de coincidencia y criterios jerárquico, cronológico y de especialidad.' },
+            { title: '2. Falacias y errores de argumentación', range: [11, 25], intro: 'Reconocimiento de razonamientos engañosos o incorrectos mediante ejemplos.' },
+            { title: '3. Estructura y clases de argumentos', range: [26, 35], intro: 'Presentación del tema, tesis, argumentos, conclusión y principales clases de argumentos.' },
+            { title: '4. Argumentos jurídicos', range: [36, 45], intro: 'Analogía, argumento a contrario, coherencia, completitud, historia, finalidad, absurdo y equidad.' },
+            { title: '5. Interpretación jurídica', range: [46, 55], intro: 'Métodos gramatical, sistemático, histórico, sociológico y teleológico; interpretación declarativa.' },
+            { title: '6. Fundamentación y motivación', range: [56, 67], intro: 'Debido proceso, decisiones sin motivación, motivación insuficiente o arbitraria y amparo constitucional.' }
+        ];
+
+        function cleanOptionText(text) {
+            return String(text || '').replace(/^\s*[a-z]\.?\s*/i, '').trim();
+        }
+
+        function originalQuestionNumber(card) {
+            return Number(card.dataset.qid || 0);
+        }
+
+        function studyPrompt(card) {
+            const content = card.querySelector('.flex-1.bg-moodle-qbox');
+            const first = content ? content.querySelector(':scope > div') : null;
+            return first ? first.textContent.replace(/\s+/g, ' ').trim() : 'Contenido de repaso';
+        }
+
+        function studyAnswer(card) {
+            const type = card.dataset.type;
+            if (type === 'mc' || type === 'tf' || type === 'multi') {
+                const expected = (card.dataset.correct || '').split(',').map(v => v.trim()).filter(Boolean);
+                return expected.map(value => cleanOptionText(getCorrectLabel(card, value))).join(' • ');
+            }
+            if (type === 'match') {
+                return Array.from(card.querySelectorAll('select.match-select')).map((sel, index) => {
+                    const row = sel.parentElement;
+                    const premiseElement = row ? Array.from(row.children).find(child => child !== sel) : null;
+                    const premise = premiseElement ? premiseElement.textContent.replace(/\s+/g, ' ').trim() : `Elemento ${index + 1}`;
+                    return `<li class="mb-2"><strong>${esc(premise)}:</strong> ${esc(getSelectCorrectText(sel))}</li>`;
+                }).join('');
+            }
+            return '';
+        }
+
+        function buildStudyGuide() {
+            const target = document.getElementById('studyTopics');
+            if (!target || target.dataset.ready) return;
+            const cards = Array.from(document.querySelectorAll('.moodle-question-card')).sort((a, b) => originalQuestionNumber(a) - originalQuestionNumber(b));
+            target.innerHTML = studyGroups.map((group, groupIndex) => {
+                const items = cards.filter(card => {
+                    const n = originalQuestionNumber(card);
+                    return n >= group.range[0] && n <= group.range[1];
+                }).map(card => {
+                    const answer = studyAnswer(card);
+                    const answerHtml = card.dataset.type === 'match'
+                        ? `<ul class="mt-2 pl-5 list-disc text-slate-800">${answer}</ul>`
+                        : `<p class="mt-2 text-slate-800"><strong>Respuesta:</strong> ${esc(answer)}</p>`;
+                    return `<article class="py-4 border-t border-slate-200 first:border-t-0">
+                        <p class="font-semibold text-slate-900 leading-relaxed">${esc(studyPrompt(card))}</p>
+                        ${answerHtml}
+                    </article>`;
+                }).join('');
+                return `<details class="study-topic study-card overflow-hidden" ${groupIndex === 0 ? 'open' : ''}>
+                    <summary class="p-5 flex items-center justify-between gap-4 bg-white hover:bg-blue-50">
+                        <div><h3 class="text-base sm:text-lg font-bold text-[#0f6cbf]">${esc(group.title)}</h3><p class="mt-1 text-xs sm:text-sm text-slate-600">${esc(group.intro)}</p></div>
+                        <i class="study-chevron w-5 h-5 flex-shrink-0 text-[#0f6cbf] transition-transform" data-lucide="chevron-down"></i>
+                    </summary>
+                    <div class="px-5 pb-3 bg-white">${items}</div>
+                </details>`;
+            }).join('');
+            target.dataset.ready = '1';
+            initIcons();
+        }
+
+        function showModeChoice() {
+            if (examState.timerId) clearInterval(examState.timerId);
+            document.getElementById('modeScreen')?.classList.remove('app-hidden');
+            document.getElementById('studyScreen')?.classList.add('app-hidden');
+            document.getElementById('fixed-top-clock')?.classList.add('app-hidden');
+            document.getElementById('leftFloatingTab')?.classList.add('app-hidden');
+            document.getElementById('moodle-wrapper')?.classList.add('app-hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showStudy() {
+            if (examState.timerId) clearInterval(examState.timerId);
+            buildStudyGuide();
+            document.getElementById('modeScreen')?.classList.add('app-hidden');
+            document.getElementById('studyScreen')?.classList.remove('app-hidden');
+            document.getElementById('fixed-top-clock')?.classList.add('app-hidden');
+            document.getElementById('leftFloatingTab')?.classList.add('app-hidden');
+            document.getElementById('moodle-wrapper')?.classList.add('app-hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function beginExam() {
+            document.getElementById('modeScreen')?.classList.add('app-hidden');
+            document.getElementById('studyScreen')?.classList.add('app-hidden');
+            document.getElementById('fixed-top-clock')?.classList.remove('app-hidden');
+            document.getElementById('leftFloatingTab')?.classList.remove('app-hidden');
+            document.getElementById('moodle-wrapper')?.classList.remove('app-hidden');
+            examState.elapsedSeconds = 0;
+            const timer = document.getElementById('staticTimerElapsed');
+            if (timer) timer.textContent = '00:00';
             startTimer();
+            fitToScreen();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function attachEventsToQuestion(q) {
@@ -5130,6 +5310,7 @@
             document.getElementById('restartBottomBtn')?.classList.add('hidden');
             shuffleExam();
             scanQuestions();
+            startTimer();
             const timer = document.getElementById('staticTimerElapsed'); if (timer) timer.textContent = '00:00';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -5144,7 +5325,22 @@
         document.getElementById('modalReviewBtn')?.addEventListener('click', () => { document.getElementById('modalMoodle')?.classList.add('hidden'); document.body.style.overflow = ''; });
         document.getElementById('modalCloseX')?.addEventListener('click', () => { document.getElementById('modalMoodle')?.classList.add('hidden'); document.body.style.overflow = ''; });
 
-        document.addEventListener('DOMContentLoaded', () => { const modal = document.getElementById('modalMoodle'); if (modal && modal.parentElement !== document.body) document.body.appendChild(modal); shuffleExam(); scanQuestions(); initIcons(); fitToScreen(); });
+        document.getElementById('chooseStudyBtn')?.addEventListener('click', showStudy);
+        document.getElementById('chooseExamBtn')?.addEventListener('click', beginExam);
+        document.getElementById('studyToExamBtn')?.addEventListener('click', beginExam);
+        document.getElementById('studyBottomExamBtn')?.addEventListener('click', beginExam);
+        document.getElementById('backToChoiceBtn')?.addEventListener('click', showModeChoice);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('modalMoodle');
+            if (modal && modal.parentElement !== document.body) document.body.appendChild(modal);
+            buildStudyGuide();
+            shuffleExam();
+            scanQuestions();
+            showModeChoice();
+            initIcons();
+            fitToScreen();
+        });
     </script>
 </body>
 
