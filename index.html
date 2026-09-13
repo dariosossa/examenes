@@ -241,7 +241,7 @@
         <main class="max-w-4xl mx-auto px-4 py-7">
             <div class="study-card p-5 mb-5">
                 <h3 class="text-xl font-bold text-slate-900 mb-2">Guía de estudio</h3>
-                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">Estudia un bloque a la vez. Lee cada idea y su respuesta; cuando estés preparado, pulsa <strong>Dar el examen</strong>. Las preguntas del examen seguirán apareciendo mezcladas para practicar.</p>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">Estudia un bloque a la vez. Primero encontrarás la explicación del tema y después las preguntas con sus respuestas exactas. Cuando estés preparado, pulsa <strong>Dar el examen</strong>. Las preguntas aparecerán mezcladas para practicar.</p>
             </div>
             <div class="space-y-4" id="studyTopics"></div>
             <div class="flex flex-col sm:flex-row gap-3 mt-7 pb-8">
@@ -4932,7 +4932,7 @@
             const input = card.querySelector(`input[value="${CSS.escape(value)}"]`);
             if (input) {
                 const label = input.closest('label');
-                if (label) return label.textContent.replace(/^\s*[a-z]\.?\s*/i, '').trim();
+                if (label) return label.textContent.replace(/^\s*[a-z]\.\s*/i, '').trim();
             }
             return value;
         }
@@ -4993,16 +4993,52 @@
         }
 
         const studyGroups = [
-            { title: '1. Antinomias y criterios de solución', range: [1, 10], intro: 'Conflictos entre normas, ámbitos de coincidencia y criterios jerárquico, cronológico y de especialidad.' },
-            { title: '2. Falacias y errores de argumentación', range: [11, 25], intro: 'Reconocimiento de razonamientos engañosos o incorrectos mediante ejemplos.' },
-            { title: '3. Estructura y clases de argumentos', range: [26, 35], intro: 'Presentación del tema, tesis, argumentos, conclusión y principales clases de argumentos.' },
-            { title: '4. Argumentos jurídicos', range: [36, 45], intro: 'Analogía, argumento a contrario, coherencia, completitud, historia, finalidad, absurdo y equidad.' },
-            { title: '5. Interpretación jurídica', range: [46, 55], intro: 'Métodos gramatical, sistemático, histórico, sociológico y teleológico; interpretación declarativa.' },
-            { title: '6. Fundamentación y motivación', range: [56, 67], intro: 'Debido proceso, decisiones sin motivación, motivación insuficiente o arbitraria y amparo constitucional.' }
+            {
+                title: '1. Antinomias y criterios de solución', range: [1, 10],
+                intro: 'Conflictos entre normas y criterios para decidir cuál se aplica.',
+                teaching: `<p><strong>¿Qué debes entender?</strong> Una antinomia aparece cuando dos normas vigentes ofrecen soluciones incompatibles para el mismo caso. Para que exista realmente, ambas deben coincidir en los ámbitos temporal, espacial, personal y material.</p>
+                <p><strong>¿Cómo se resuelve?</strong> Primero se revisa la jerarquía: la norma superior prevalece sobre la inferior. Si tienen la misma jerarquía, puede aplicarse el criterio cronológico, por el cual se prefiere la norma posterior. Si una norma es general y otra regula específicamente el caso, se aplica el criterio de especialidad.</p>
+                <p><strong>Idea clave:</strong> dejar de aplicar una norma en un caso concreto no significa derogarla. La norma desplazada continúa vigente mientras ningún acto jurídico le quite su validez o vigencia.</p>`
+            },
+            {
+                title: '2. Falacias y errores de argumentación', range: [11, 25],
+                intro: 'Cómo reconocer razonamientos que parecen convincentes, pero son incorrectos.',
+                teaching: `<p><strong>¿Qué debes entender?</strong> Una falacia es un razonamiento que parece correcto o persuasivo, pero contiene un error. Para reconocerla, observa qué recurso usa la persona en lugar de presentar una razón válida.</p>
+                <p><strong>Cómo diferenciarlas:</strong> si ataca a la persona, es <em>contra la persona</em>; si amenaza, es <em>apelación a la fuerza</em>; si busca causar pena, es <em>ad misericordiam</em>; si dice que algo es verdad porque muchos lo creen, es <em>ad populum</em>; si usa a una persona famosa que no es especialista, es <em>apelación indebida a la autoridad</em>.</p>
+                <p><strong>Otras señales:</strong> sacar una regla general de pocos casos es generalización apresurada; atribuir sin prueba un efecto a una causa es causa falsa; afirmar en la conclusión lo mismo que se intenta demostrar es petición de principio; atribuir al conjunto lo que corresponde a sus partes es composición, y atribuir a cada parte lo que corresponde al conjunto es división.</p>`
+            },
+            {
+                title: '3. Estructura y clases de argumentos', range: [26, 35],
+                intro: 'Cómo se organiza una argumentación y cómo reconocer sus clases.',
+                teaching: `<p><strong>Estructura lógica:</strong> primero se presenta el tema; después aparece la tesis, que es la posición que se defenderá; luego se ofrecen argumentos o razones; finalmente se expresa la conclusión.</p>
+                <p><strong>Clases principales:</strong> el argumento de autoridad cita una fuente reconocida; el de competencia se apoya en la preparación o experiencia de quien habla; el basado en hechos usa cifras o datos; el de ejemplos presenta casos concretos; el causal explica causas y efectos; el de sentir general se apoya en la opinión mayoritaria.</p>
+                <p><strong>Deductivo y contraargumento:</strong> el argumento deductivo parte de una idea general y llega a un caso particular. El contraargumento reconoce o responde la idea contraria y explica por qué no destruye la tesis defendida.</p>`
+            },
+            {
+                title: '4. Argumentos jurídicos', range: [36, 45],
+                intro: 'Formas de justificar la aplicación o interpretación de una norma.',
+                teaching: `<p><strong>Analogía y sentido contrario:</strong> el argumento por analogía aplica a un caso no regulado la solución de otro caso semejante. El argumento a contrario restringe la norma a los casos expresamente mencionados.</p>
+                <p><strong>Finalidad y sistema:</strong> el argumento teleológico busca la finalidad de la norma. El argumento de coherencia evita contradicciones dentro del ordenamiento. El de completitud ayuda a llenar vacíos. La reducción al absurdo rechaza una interpretación porque conduciría a una consecuencia imposible o irracional.</p>
+                <p><strong>Historia, equidad y fuerza:</strong> el argumento histórico estudia el contexto anterior de una norma. La equidad considera las circunstancias para alcanzar una solución justa. <em>A maiore ad minus</em> significa que quien puede hacer lo más también puede hacer lo menos.</p>`
+            },
+            {
+                title: '5. Interpretación jurídica', range: [46, 55],
+                intro: 'Métodos utilizados para determinar el sentido y alcance de una disposición.',
+                teaching: `<p><strong>Primera diferencia:</strong> la disposición normativa es el texto escrito que se interpreta; la norma es el significado obtenido después de interpretarlo.</p>
+                <p><strong>Métodos:</strong> el gramatical estudia las palabras; el sistemático relaciona la disposición con el lugar que ocupa y con otras normas; el histórico revisa antecedentes y debates; el sociológico considera los cambios actuales de la sociedad; el teleológico busca la finalidad o razón de ser de la norma.</p>
+                <p><strong>Cómo justificar:</strong> una interpretación sólida no solo explica el método elegido. También compara las posibles interpretaciones y señala por qué una alternativa resulta menos convincente. La interpretación declarativa mantiene el alcance normal del texto, sin ampliarlo ni reducirlo.</p>`
+            },
+            {
+                title: '6. Fundamentación y motivación', range: [56, 67],
+                intro: 'Cómo debe justificarse una resolución judicial o administrativa.',
+                teaching: `<p><strong>Diferencia central:</strong> fundamentar consiste en citar los preceptos legales sustantivos y adjetivos en los que se apoya una decisión. Motivar consiste en presentar los razonamientos lógico-jurídicos que explican por qué esos hechos y normas conducen a la conclusión.</p>
+                <p><strong>Tres defectos:</strong> hay decisión sin motivación cuando no existen razones de hecho o de derecho; hay motivación insuficiente cuando la autoridad omite responder temas o problemas jurídicos planteados; hay motivación arbitraria cuando valora la prueba de manera irrazonable o no valora una prueba aportada.</p>
+                <p><strong>Idea clave:</strong> una motivación puede ser breve, pero debe ser clara, razonada y permitir comprender la decisión. La falta de fundamentación o motivación vulnera el debido proceso y puede reclamarse mediante acción de amparo constitucional.</p>`
+            }
         ];
 
         function cleanOptionText(text) {
-            return String(text || '').replace(/^\s*[a-z]\.?\s*/i, '').trim();
+            return String(text || '').replace(/^\s*[a-z]\.\s*/i, '').trim();
         }
 
         function originalQuestionNumber(card) {
@@ -5046,6 +5082,7 @@
                         ? `<ul class="mt-2 pl-5 list-disc text-slate-800">${answer}</ul>`
                         : `<p class="mt-2 text-slate-800"><strong>Respuesta:</strong> ${esc(answer)}</p>`;
                     return `<article class="py-4 border-t border-slate-200 first:border-t-0">
+                        <p class="text-[11px] font-bold uppercase tracking-wide text-[#0f6cbf] mb-1">Si en el examen te preguntan:</p>
                         <p class="font-semibold text-slate-900 leading-relaxed">${esc(studyPrompt(card))}</p>
                         ${answerHtml}
                     </article>`;
@@ -5055,7 +5092,14 @@
                         <div><h3 class="text-base sm:text-lg font-bold text-[#0f6cbf]">${esc(group.title)}</h3><p class="mt-1 text-xs sm:text-sm text-slate-600">${esc(group.intro)}</p></div>
                         <i class="study-chevron w-5 h-5 flex-shrink-0 text-[#0f6cbf] transition-transform" data-lucide="chevron-down"></i>
                     </summary>
-                    <div class="px-5 pb-3 bg-white">${items}</div>
+                    <div class="px-5 pb-3 bg-white">
+                        <div class="my-2 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm sm:text-base leading-relaxed text-slate-800 space-y-3">
+                            <div class="flex items-center gap-2 font-bold text-[#0f6cbf]"><i class="w-5 h-5" data-lucide="lightbulb"></i> Primero aprende esto</div>
+                            ${group.teaching}
+                        </div>
+                        <div class="mt-5 mb-1 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-950"><strong>Ahora relaciona lo aprendido con las preguntas exactas del examen:</strong></div>
+                        ${items}
+                    </div>
                 </details>`;
             }).join('');
             target.dataset.ready = '1';
